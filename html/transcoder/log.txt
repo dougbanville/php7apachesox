@@ -1,0 +1,2 @@
+/usr/bin/sox audio/1546597587.mp3 audio/1546597587-p.mp3 trim 00026.452 01:36.027 gain 8
+audiowaveform -i audio/1546597587-p.mp3 -o audio/1546597587-p.mp3.json

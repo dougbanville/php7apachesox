@@ -1,0 +1,1 @@
+nohup php audioProcessor.php -LTSIqIxBc_3r7Y8hXzP audio/1544532508.mp3 audio/1544532508-p.mp3 00001.000 04:57.1,000 8 >/dev/null 2>&1 &
