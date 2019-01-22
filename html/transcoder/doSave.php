@@ -28,10 +28,6 @@ $url = "http://radiodj.rte.ie/media/flashbriefing/$fileName";
 
 $filename = "audio/".$category."-".date("Y-m-d-his").".mp4";
 
-
-
-
-
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -89,6 +85,6 @@ fclose($myfile);
 
 $log = "<p>Save Flash briefing json to $file</p>";
 
-$log .= "<p>Created new file for $category ".s3Upload($file, $category, getenv('bucketName'), false)."</p>";
+$log .= "<p>Created new file for $category ".s3Upload($file, $category, getenv("flashbriefingBucket"), false)."</p>";
 
 log2Firebase($log,"video","");
