@@ -75,7 +75,7 @@ $data = array(
 
 $json = json_encode($data,JSON_UNESCAPED_SLASHES);
 
-$file = "audio/".$category.".json";
+$file = "audio/feed.json";
 
 
 $myfile = fopen($file, "w") or die("Unable to open file!");
