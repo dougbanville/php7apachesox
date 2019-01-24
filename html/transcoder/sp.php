@@ -9,7 +9,6 @@ echo getenv("version");
 $serviceAccount = ServiceAccount::fromJsonFile('../../firebase.json');
 $firebase = (new Factory)
     ->withServiceAccount($serviceAccount)
-    ->withDatabaseUri('https://radio-a8e0f.firebaseio.com')
     ->create();
 
 $db = $firebase->getDatabase();
