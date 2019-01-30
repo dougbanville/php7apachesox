@@ -3,6 +3,7 @@
         "aws/aws-sdk-php": "^3.81",
         "kreait/firebase-php": "^4.18",
         "vlucas/phpdotenv": "^2.5",
-        "phpseclib/phpseclib": "^2.0"
+        "phpseclib/phpseclib": "^2.0",
+        "neomerx/json-api": "^2.0"
     }
 }
