@@ -55,7 +55,7 @@ $trimAudioAddGaincommand = "/usr/bin/sox $inputFile $outputFile trim $audioIn $d
 
 exec($trimAudioAddGaincommand);
 //make json file of audio peaeks
-$createAudioWaveCommand = "audiowaveform -i $outputFile -o $outputFile.json";
+$createAudioWaveCommand = "audiowaveform -i $outputFile -o $outputFile.json  -b 8";
 $audiowaveform = exec($createAudioWaveCommand);
 
 //upload the file to AWS
