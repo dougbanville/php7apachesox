@@ -79,7 +79,7 @@ $db->getReference('audioclips/' . $audioId . '/publishDate')->set(date("Y-m-d H:
 $db->getReference('audioclips/' . $audioId . '/fileSize')->set($fileSize);
 
 $db->getReference('audioclips/' . $audioId . '/awsaudio')->set($newFileName);
-$db->getReference('audioclips/' . $audioId . '/wave-json')->set($json);
+$db->getReference('audioclips/' . $audioId . '/waveJson')->set($json);
 
 
 if ($isFlashBriefing) {
