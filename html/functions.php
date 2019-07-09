@@ -1,13 +1,12 @@
 <?php
 require 'vendor/autoload.php';
-$dotenv = new Dotenv\Dotenv(__DIR__.'/../');
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
 $dotenv->load();
-use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\S3\S3Client;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
 
-function saveFileFromUrl($url,$fileName)
+function saveFileFromUrl($url, $fileName)
 {
     $ch = curl_init($url);
     //curl_setopt($ch, CURLOPT_URL, $url);
@@ -18,11 +17,12 @@ function saveFileFromUrl($url,$fileName)
     $myfile = fopen($fileName, "w") or die("Unable to open file!");
     fwrite($myfile, $output);
     fclose($myfile);
-    
+
     curl_close($ch);
 }
 
-function quicks3Upload($file, $bucketName){
+function quicks3Upload($file, $bucketName)
+{
 
     $s3Client = new S3Client([
         'version' => 'latest',
@@ -39,7 +39,6 @@ function quicks3Upload($file, $bucketName){
         'ACL' => 'public-read',
     ));
 
-
     // We can poll the object until it is accessible
     $s3Client->waitUntil('ObjectExists', array(
         'Bucket' => $bucketName,
@@ -51,20 +50,20 @@ function quicks3Upload($file, $bucketName){
     } else {
         echo "Couldn't delete temp file";
     }
-    return "https://s3-eu-west-1.amazonaws.com/" . $bucketName . "/" .$file;
+    return "https://s3-eu-west-1.amazonaws.com/" . $bucketName . "/" . $file;
 
 }
 
-function s3Upload($file, $path, $bucketName, $rename=false)
+function s3Upload($file, $path, $bucketName, $rename = false)
 {
     $ext = pathinfo($file, PATHINFO_EXTENSION);
-    
-    if($rename){
-        $newFileName = $path."/".date("ymdhis") . "." . $ext;
-    }else{
-        $newFileName = $path."/".basename($file);
+
+    if ($rename) {
+        $newFileName = $path . "/" . date("ymdhis") . "." . $ext;
+    } else {
+        $newFileName = $path . "/" . basename($file);
     }
-    
+
     $s3Client = new S3Client([
         'version' => 'latest',
         'region' => 'eu-west-1',
@@ -94,12 +93,13 @@ function s3Upload($file, $path, $bucketName, $rename=false)
     return "https://s3-eu-west-1.amazonaws.com/" . $bucketName . "/" . $newFileName;
 }
 
-function uploadFlashBriefingJson($bucketName,$category){
+function uploadFlashBriefingJson($bucketName, $category)
+{
 
     $s3Client = new S3Client([
         'version' => 'latest',
         'region' => 'eu-west-1',
-        'ACL'    => 'public-read',
+        'ACL' => 'public-read',
         'credentials' => [
             'key' => getenv('accessKey'),
             'secret' => getenv('secret'),
@@ -108,7 +108,7 @@ function uploadFlashBriefingJson($bucketName,$category){
 
     $s3Client->registerStreamWrapper();
 
-    $stream = fopen('s3://'.$bucketName.'/json/'.$category.'.json', 'w');
+    $stream = fopen('s3://' . $bucketName . '/json/' . $category . '.json', 'w');
     fwrite($stream, 'Hello!');
     fclose($stream);
 
@@ -144,11 +144,11 @@ function getClipperFileName($siteId, $radiomanid, $modifydate, $slug, $title, $f
         $xml = simplexml_load_string($response) or die("Error: Cannot create object");
         $fileName = $xml[0];
         $fileName = str_replace("Successful ", "", $fileName);
-        return "inews_".$modifydate.$fileName;
+        return "inews_" . $modifydate . $fileName;
     }
     /*
     Where:
-    modifydate = Math.round((new Date()).getTime() / 1000); 
+    modifydate = Math.round((new Date()).getTime() / 1000);
     RadiomanID = Unique integer - try use modifydate above
     siteId = 1322 (test changes)
     slug / title / fieldTitle all the same - (mi-/nw1-/tw-)ClipNameWithNoSpaces
@@ -158,17 +158,16 @@ function getClipperFileName($siteId, $radiomanid, $modifydate, $slug, $title, $f
     Save file with this name, using modified date above and the 3 ids from the response:
 
     inews_1543481759_10969970_21471137_10969971_1_twjdtest2_a_1543481759_rte54fminews.mp2
-    */
+     */
 
     //10967858_21469746_10969147_DB-Test
 };
 
-function log2Firebase($log,$type,$logRef)
+function log2Firebase($log, $type, $logRef)
 {
-    $serviceAccount = ServiceAccount::fromJsonFile('../../firebase.json');
+    $serviceAccount = ServiceAccount::fromJsonFile(__DIR__ . '/../firebase.json');
     $firebase = (new Factory)
         ->withServiceAccount($serviceAccount)
-        ->withDatabaseUri('https://radio-a8e0f.firebaseio.com')
         ->create();
 
     $db = $firebase->getDatabase();
@@ -176,42 +175,43 @@ function log2Firebase($log,$type,$logRef)
         'log' => $log,
         'type' => $type,
         'time' => date('Y-m-d H:i:s'),
-        'audioId' => $type
+        'audioId' => $type,
     ];
     $db->getReference('logs')->push($logData);
 }
 
-function makeXMLFile($fileName,$obj){
-    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" />'); 
+function makeXMLFile($fileName, $obj)
+{
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" />');
 
-    $channel = $xml->addChild('channel'); 
-    $channel->addChild('title',$obj["title"]); 
-    $channel->addChild('link',$obj["url"]);
-    $channel->addChild('title',$obj["title"]);
-    $channel->addChild('description',$obj["description"]);
-    $channel->addChild('language','en-ie');
-    $channel->addChild('category',$obj["category"]);
-    $channel->addChild('copyright',date("Y")." RTÉ");
-    $channel->addChild('lastBuildDate',gmdate("D, d M Y H:i:s +0000"));
-    $channel->addChild('ttl',60);
+    $channel = $xml->addChild('channel');
+    $channel->addChild('title', $obj["title"]);
+    $channel->addChild('link', $obj["url"]);
+    $channel->addChild('title', $obj["title"]);
+    $channel->addChild('description', $obj["description"]);
+    $channel->addChild('language', 'en-ie');
+    $channel->addChild('category', $obj["category"]);
+    $channel->addChild('copyright', date("Y") . " RTÉ");
+    $channel->addChild('lastBuildDate', gmdate("D, d M Y H:i:s +0000"));
+    $channel->addChild('ttl', 60);
     $image = $channel->addChild('image');
-    $image->addChild('url',$obj["imageUrl"]);
-    $image->addChild('link',$obj["imageLink"]);
+    $image->addChild('url', $obj["imageUrl"]);
+    $image->addChild('link', $obj["imageLink"]);
     $item = $channel->addChild('item');
-    $item->addChild('title',$obj["title"]);
-    $item->addChild('link',$obj["link"]);
-    $item->addChild('description',$obj["description"]);
-    $item->addChild('author',"info@rte.ie (RTÉ)");
-    $item->addChild('pubDate',gmdate("D, d M Y H:i:s +0000"));
-    $item->addChild('guid',$obj["guid"]);
-    $item->addChild('ttl',60);
+    $item->addChild('title', $obj["title"]);
+    $item->addChild('link', $obj["link"]);
+    $item->addChild('description', $obj["description"]);
+    $item->addChild('author', "info@rte.ie (RTÉ)");
+    $item->addChild('pubDate', gmdate("D, d M Y H:i:s +0000"));
+    $item->addChild('guid', $obj["guid"]);
+    $item->addChild('ttl', 60);
     $enclosure = $item->addChild('enclosure');
-    $enclosure->addAttribute('url',$obj["audioUrl"]);
-    $enclosure->addAttribute('length',$obj["audioLength"]);
-    $enclosure->addAttribute('type',$obj["audioType"]);
-    $item->addChild('category',$obj["category"]);
+    $enclosure->addAttribute('url', $obj["audioUrl"]);
+    $enclosure->addAttribute('length', $obj["audioLength"]);
+    $enclosure->addAttribute('type', $obj["audioType"]);
+    $item->addChild('category', $obj["category"]);
     //$item->addChild('itunes:duration',$obj["duration"]);
-    $item->addChild('itunes:duration',$obj["duration"],$obj["duration"]);
+    $item->addChild('itunes:duration', $obj["duration"], $obj["duration"]);
 
     $myfile = fopen($fileName, "w") or die("Unable to open file!");
     fwrite($myfile, $xml->asXML());
@@ -220,5 +220,3 @@ function makeXMLFile($fileName,$obj){
     //$url = quicks3Upload($myfile, $bucketName);
     return $fileName;
 }
-
-?>
