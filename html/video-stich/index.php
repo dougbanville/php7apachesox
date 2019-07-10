@@ -12,14 +12,8 @@ function rutime($ru, $rus, $index)
          - ($rus["ru_$index.tv_sec"] * 1000 + intval($rus["ru_$index.tv_usec"] / 1000));
 }
 //https://trac.ffmpeg.org/wiki/Concatenate
-$command = "ffmpeg -f concat -safe 0 -i mylist.txt -c copy output-p1.mp4";
+$command = "ffmpeg -f concat -safe 0 -i mylist.txt -c copy output.mp4";
 
-echo exec($command);
+exec($command);
 
-//echo "hello";
-
-$endTime = microtime(true);
-$diff = round($endTime - $startTime);
-$minutes = floor($diff / 60); //only minutes
-$seconds = $diff % 60; //remaining seconds, using modulo operator
-echo "script execution time: minutes:$minutes, seconds:$seconds"; //value in seconds
+echo "DONE! <a href='output.mp4'>Video</a>";
