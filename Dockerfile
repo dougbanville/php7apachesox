@@ -4,8 +4,8 @@ MAINTAINER Doug Banville <doug.banville@rte.ie>
 VOLUME ["/var/www"]
 
 RUN apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y \
+      apt-get dist-upgrade -y && \
+      apt-get install -y \
       apache2 \
       php7.0 \
       php7.0-cli \
@@ -30,6 +30,7 @@ RUN apt-get update && \
       lame \
       php-curl \
       vim \
+      ffmpeg \
       git make cmake gcc g++ libmad0-dev \
       libid3tag0-dev libsndfile1-dev libgd-dev libboost-filesystem-dev \
       libboost-program-options-dev \
@@ -48,7 +49,7 @@ RUN apt-get update && \
       && cmake .. \
       && make install \
       && cd ..
-      
+
 COPY apache_default /etc/apache2/sites-available/000-default.conf
 COPY run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
