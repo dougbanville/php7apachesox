@@ -53,6 +53,7 @@ RUN apt-get update && \
 COPY apache_default /etc/apache2/sites-available/000-default.conf
 COPY run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
+RUN chmod -R 777 /var/www/video-stich
 RUN a2enmod rewrite
 
 EXPOSE 80
