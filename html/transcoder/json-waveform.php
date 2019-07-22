@@ -4,7 +4,7 @@ $url = "https://kronos.rte.ie/realmedia//2019/0718/audiobrowse/18072019230000-rn
 $url = $_GET["url"];
 $path = parse_url($url, PHP_URL_PATH);
 $outputFile = "audio/".basename($path);
-$jsonFileName = "json/".str_replace(".mp3",".json", $outputFile);
+$jsonFileName = "audio/".str_replace(".mp3",".json", $outputFile);
 
 $ch = curl_init($url);
 $fp = fopen($outputFile, 'wb');
