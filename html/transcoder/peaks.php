@@ -27,7 +27,7 @@ $jsonFileName = str_replace(".mp3",".json", $outputFile);
             //zoomLevels: [512, 1024, 2048, 4096],
             height: 400,
             dataUri: {
-                json: '<?php echo $jsonFileName; ?>'
+                json: 'audio/<?php echo $jsonFileName; ?>'
             }
         });
         document.getElementById("play").addEventListener("click", () => {
