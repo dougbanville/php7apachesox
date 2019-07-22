@@ -1,4 +1,5 @@
 <VirtualHost *:80>
+	Header set Access-Control-Allow-Origin "*"
 	# Always set these headers.
 		Header always set Access-Control-Allow-Origin "*"
 		Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
@@ -22,8 +23,10 @@
 	DocumentRoot /var/www
 
     <Directory /var/www>
-        AllowOverride All
-        Require all granted
+		Order Allow,Deny
+		Allow from all
+		AllowOverride all
+		Header set Access-Control-Allow-Origin "*"
     </Directory>
 
 	# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,

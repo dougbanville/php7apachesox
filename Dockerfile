@@ -55,6 +55,7 @@ COPY run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
 RUN chmod -R 777 /var/www/video-stich
 RUN a2enmod rewrite
+RUN a2enmod headers
 
 EXPOSE 80
 CMD ["/usr/local/bin/run"]

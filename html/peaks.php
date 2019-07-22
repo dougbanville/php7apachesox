@@ -1,4 +1,9 @@
-
+<?php
+$url = $_GET["file"];
+$path = parse_url($url, PHP_URL_PATH);
+$outputFile = basename($path);
+$jsonFileName = str_replace(".mp3",".json", $outputFile);
+?>
 <html>
 
 <head>
@@ -8,7 +13,7 @@
 <body>
     <div id="peaks-container"></div>
     <audio controls>
-        <source src="https://kronos.rte.ie/realmedia//2019/0718/audiobrowse/18072019230000-rnag-scothandeardaoin-pid3125-25380000_audio.mp3" type="audio/mpeg">
+        <source src="<?php echo $url;?>" type="audio/mpeg">
     </audio>
 
     <button id="play">Play</button>
@@ -22,7 +27,7 @@
             //zoomLevels: [512, 1024, 2048, 4096],
             height: 400,
             dataUri: {
-                json: 'http://localhost/transcoder/18072019230000-rnag-scothandeardaoin-pid3125-25380000_audio.json'
+                json: '/transcoder/<?php echo $jsonFileName; ?>'
             }
         });
         document.getElementById("play").addEventListener("click", () => {
