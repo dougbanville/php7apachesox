@@ -24,6 +24,6 @@ $audiowaveform = exec($createAudioWaveCommand);
 unlink($outputFile);
 echo $outputFile." deleted?";
 
-echo "<a href='/peaks.php?file=".$url."'>File</a>";
+echo "<a href='peaks.php?file=".$url."'>File</a>";
 echo $jsonFileName;
 ?>
